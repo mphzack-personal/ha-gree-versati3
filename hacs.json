@@ -1,0 +1,8 @@
+{
+  "name": "Gree Versati 3 Local",
+  "domains": [
+    "gree_versati"
+  ],
+  "render_readme": true,
+  "homeassistant": "2024.8.0"
+}
