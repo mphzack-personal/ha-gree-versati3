@@ -56,11 +56,11 @@ DATA_CLIENT: Final = "client"
 DATA_COORDINATOR: Final = "coordinator"
 
 MODE_OPTIONS: Final[dict[str, int]] = {
-    "Auto": 0,
     "Heat": 1,
-    "Cool": 2,
-    "DHW": 3,
-    "Heat+DHW": 4,
+    "Cool": 5,
+    "Hot water": 2,
+    "Cool + hot water": 3,
+    "Heat + hot water": 4,
 }
 
 PLATFORMS: Final[list[Platform]] = [
