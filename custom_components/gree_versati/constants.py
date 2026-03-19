@@ -32,6 +32,8 @@ PARAM_TEM_UN: Final = "TemUn"
 PARAM_ALL_ERR: Final = "AllErr"
 PARAM_MOD: Final = "Mod"
 PARAM_POW: Final = "Pow"
+PARAM_HEP_OUT_WAT_TEM_HI: Final = "HepOutWatTemHi"
+PARAM_HEP_OUT_WAT_TEM_LO: Final = "HepOutWatTemLo"
 
 POLL_KEYS: Final[tuple[str, ...]] = (
     PARAM_HE_WAT_OUT_TEM_SET,
@@ -40,6 +42,8 @@ POLL_KEYS: Final[tuple[str, ...]] = (
     PARAM_ALL_ERR,
     PARAM_MOD,
     PARAM_POW,
+    PARAM_HEP_OUT_WAT_TEM_HI,
+    PARAM_HEP_OUT_WAT_TEM_LO,
 )
 
 SERVICE_SET_PARAM: Final = "set_param"

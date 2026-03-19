@@ -70,6 +70,12 @@
       },
       "pow": {
         "name": "Power"
+      },
+      "hep_out_wat_tem_hi": {
+        "name": "Heat pump outlet water temperature high"
+      },
+      "hep_out_wat_tem_lo": {
+        "name": "Heat pump outlet water temperature low"
       }
     }
   }

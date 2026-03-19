@@ -15,6 +15,8 @@ from .constants import (
     DATA_ENTRIES,
     PARAM_ALL_ERR,
     PARAM_HE_WAT_OUT_TEM_SET,
+    PARAM_HEP_OUT_WAT_TEM_HI,
+    PARAM_HEP_OUT_WAT_TEM_LO,
     PARAM_MOD,
     PARAM_POW,
     PARAM_TEM_UN,
@@ -61,6 +63,16 @@ SENSOR_DESCRIPTIONS: tuple[GreeVersatiSensorDescription, ...] = (
         key="pow",
         translation_key="pow",
         param_key=PARAM_POW,
+    ),
+    GreeVersatiSensorDescription(
+        key="hep_out_wat_tem_hi",
+        translation_key="hep_out_wat_tem_hi",
+        param_key=PARAM_HEP_OUT_WAT_TEM_HI,
+    ),
+    GreeVersatiSensorDescription(
+        key="hep_out_wat_tem_lo",
+        translation_key="hep_out_wat_tem_lo",
+        param_key=PARAM_HEP_OUT_WAT_TEM_LO,
     ),
 )
 
