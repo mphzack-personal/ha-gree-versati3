@@ -71,11 +71,20 @@
       "pow": {
         "name": "Power"
       },
-      "hep_out_wat_tem_hi": {
-        "name": "Heat pump outlet water temperature high"
+      "t_optional_water_sen": {
+        "name": "T-optional water sen"
       },
-      "hep_out_wat_tem_lo": {
-        "name": "Heat pump outlet water temperature low"
+      "t_water_in_pe": {
+        "name": "T-water in PE"
+      },
+      "t_water_tank": {
+        "name": "T-water tank"
+      },
+      "t_water_out_pe": {
+        "name": "T-water out PE"
+      },
+      "remote_room_temperature": {
+        "name": "Remote room temperature"
       }
     }
   }

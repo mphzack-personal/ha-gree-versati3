@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+)
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -14,13 +19,21 @@ from .constants import (
     DATA_COORDINATOR,
     DATA_ENTRIES,
     PARAM_ALL_ERR,
+    PARAM_ALL_IN_WAT_TEM_HI,
+    PARAM_ALL_IN_WAT_TEM_LO,
+    PARAM_ALL_OUT_WAT_TEM_HI,
+    PARAM_ALL_OUT_WAT_TEM_LO,
     PARAM_HE_WAT_OUT_TEM_SET,
     PARAM_HEP_OUT_WAT_TEM_HI,
     PARAM_HEP_OUT_WAT_TEM_LO,
     PARAM_MOD,
     PARAM_POW,
+    PARAM_RMO_HOM_TEM_HI,
+    PARAM_RMO_HOM_TEM_LO,
     PARAM_TEM_UN,
     PARAM_WAT_BOX_TEM_SET,
+    PARAM_WAT_BOX_TEM_HI,
+    PARAM_WAT_BOX_TEM_LO,
 )
 from .coordinator import GreeVersatiCoordinator
 from .entity import GreeVersatiEntity
@@ -30,7 +43,9 @@ from .entity import GreeVersatiEntity
 class GreeVersatiSensorDescription(SensorEntityDescription):
     """Description of a Gree Versati sensor."""
 
-    param_key: str
+    param_key: str | None = None
+    param_key_hi: str | None = None
+    param_key_lo: str | None = None
 
 
 SENSOR_DESCRIPTIONS: tuple[GreeVersatiSensorDescription, ...] = (
@@ -65,14 +80,44 @@ SENSOR_DESCRIPTIONS: tuple[GreeVersatiSensorDescription, ...] = (
         param_key=PARAM_POW,
     ),
     GreeVersatiSensorDescription(
-        key="hep_out_wat_tem_hi",
-        translation_key="hep_out_wat_tem_hi",
-        param_key=PARAM_HEP_OUT_WAT_TEM_HI,
+        key="t_optional_water_sen",
+        translation_key="t_optional_water_sen",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        param_key_hi=PARAM_HEP_OUT_WAT_TEM_HI,
+        param_key_lo=PARAM_HEP_OUT_WAT_TEM_LO,
     ),
     GreeVersatiSensorDescription(
-        key="hep_out_wat_tem_lo",
-        translation_key="hep_out_wat_tem_lo",
-        param_key=PARAM_HEP_OUT_WAT_TEM_LO,
+        key="t_water_in_pe",
+        translation_key="t_water_in_pe",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        param_key_hi=PARAM_ALL_IN_WAT_TEM_HI,
+        param_key_lo=PARAM_ALL_IN_WAT_TEM_LO,
+    ),
+    GreeVersatiSensorDescription(
+        key="t_water_tank",
+        translation_key="t_water_tank",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        param_key_hi=PARAM_WAT_BOX_TEM_HI,
+        param_key_lo=PARAM_WAT_BOX_TEM_LO,
+    ),
+    GreeVersatiSensorDescription(
+        key="t_water_out_pe",
+        translation_key="t_water_out_pe",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        param_key_hi=PARAM_ALL_OUT_WAT_TEM_HI,
+        param_key_lo=PARAM_ALL_OUT_WAT_TEM_LO,
+    ),
+    GreeVersatiSensorDescription(
+        key="remote_room_temperature",
+        translation_key="remote_room_temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        param_key_hi=PARAM_RMO_HOM_TEM_HI,
+        param_key_lo=PARAM_RMO_HOM_TEM_LO,
     ),
 )
 
@@ -104,10 +149,22 @@ class GreeVersatiSensor(GreeVersatiEntity, SensorEntity):
         device_id: str,
         description: GreeVersatiSensorDescription,
     ) -> None:
-        super().__init__(coordinator, device_id, description.param_key)
+        param_key = description.param_key or description.param_key_hi or ""
+        super().__init__(coordinator, device_id, param_key)
         self.entity_description = description
 
     @property
     def native_value(self) -> str | int | float | bool | None:
-        """Return raw protocol value."""
-        return (self.coordinator.data or {}).get(self.entity_description.param_key)
+        """Return raw protocol value or calculated combined value."""
+        data = self.coordinator.data or {}
+        
+        # Handle combined Hi/Lo temperature sensors
+        if self.entity_description.param_key_hi and self.entity_description.param_key_lo:
+            hi = data.get(self.entity_description.param_key_hi)
+            lo = data.get(self.entity_description.param_key_lo)
+            if hi is not None and lo is not None:
+                return round((float(hi) - 100) + float(lo) / 10, 1)
+            return None
+        
+        # Handle single value sensors
+        return data.get(self.entity_description.param_key)
