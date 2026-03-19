@@ -70,6 +70,27 @@
       },
       "pow": {
         "name": "Power"
+      },
+      "het_ht_wter": {
+        "name": "Heating hot water"
+      },
+      "elc_he1_run_sta": {
+        "name": "Electric heater 1 run status"
+      },
+      "elc_he2_run_sta": {
+        "name": "Electric heater 2 run status"
+      },
+      "wat_box_elc_he_run_sta": {
+        "name": "Water box electric heater run status"
+      },
+      "an_frzz_run_sta": {
+        "name": "Anti-freeze run status"
+      },
+      "sy_an_fro_run_sta": {
+        "name": "System anti-frost run status"
+      },
+      "sv_st": {
+        "name": "Save status"
       }
     }
   }

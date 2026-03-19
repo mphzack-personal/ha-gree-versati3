@@ -42,6 +42,13 @@ PARAM_ALL_OUT_WAT_TEM_HI: Final = "AllOutWatTemHi"
 PARAM_ALL_OUT_WAT_TEM_LO: Final = "AllOutWatTemLo"
 PARAM_RMO_HOM_TEM_HI: Final = "RmoHomTemHi"
 PARAM_RMO_HOM_TEM_LO: Final = "RmoHomTemLo"
+PARAM_HET_HT_WTER: Final = "HetHtWter"
+PARAM_ELC_HE1_RUN_STA: Final = "ElcHe1RunSta"
+PARAM_ELC_HE2_RUN_STA: Final = "ElcHe2RunSta"
+PARAM_WAT_BOX_ELC_HE_RUN_STA: Final = "WatBoxElcHeRunSta"
+PARAM_AN_FRZZ_RUN_STA: Final = "AnFrzzRunSta"
+PARAM_SY_AN_FRO_RUN_STA: Final = "SyAnFroRunSta"
+PARAM_SV_ST: Final = "SvSt"
 
 POLL_KEYS: Final[tuple[str, ...]] = (
     PARAM_HE_WAT_OUT_TEM_SET,
@@ -60,6 +67,13 @@ POLL_KEYS: Final[tuple[str, ...]] = (
     PARAM_ALL_OUT_WAT_TEM_LO,
     PARAM_RMO_HOM_TEM_HI,
     PARAM_RMO_HOM_TEM_LO,
+    PARAM_HET_HT_WTER,
+    PARAM_ELC_HE1_RUN_STA,
+    PARAM_ELC_HE2_RUN_STA,
+    PARAM_WAT_BOX_ELC_HE_RUN_STA,
+    PARAM_AN_FRZZ_RUN_STA,
+    PARAM_SV_ST,
+    PARAM_SY_AN_FRO_RUN_STA,
 )
 
 SERVICE_SET_PARAM: Final = "set_param"

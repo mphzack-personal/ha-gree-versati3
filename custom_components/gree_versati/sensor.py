@@ -23,6 +23,9 @@ from .constants import (
     PARAM_ALL_IN_WAT_TEM_LO,
     PARAM_ALL_OUT_WAT_TEM_HI,
     PARAM_ALL_OUT_WAT_TEM_LO,
+    PARAM_AN_FRZZ_RUN_STA,
+    PARAM_ELC_HE1_RUN_STA,
+    PARAM_ELC_HE2_RUN_STA,
     PARAM_HE_WAT_OUT_TEM_SET,
     PARAM_HEP_OUT_WAT_TEM_HI,
     PARAM_HEP_OUT_WAT_TEM_LO,
@@ -30,7 +33,11 @@ from .constants import (
     PARAM_POW,
     PARAM_RMO_HOM_TEM_HI,
     PARAM_RMO_HOM_TEM_LO,
+    PARAM_SY_AN_FRO_RUN_STA,
     PARAM_TEM_UN,
+    PARAM_HET_HT_WTER,
+    PARAM_SV_ST,
+    PARAM_WAT_BOX_ELC_HE_RUN_STA,
     PARAM_WAT_BOX_TEM_SET,
     PARAM_WAT_BOX_TEM_HI,
     PARAM_WAT_BOX_TEM_LO,
@@ -118,6 +125,41 @@ SENSOR_DESCRIPTIONS: tuple[GreeVersatiSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         param_key_hi=PARAM_RMO_HOM_TEM_HI,
         param_key_lo=PARAM_RMO_HOM_TEM_LO,
+    ),
+    GreeVersatiSensorDescription(
+        key="het_ht_wter",
+        translation_key="het_ht_wter",
+        param_key=PARAM_HET_HT_WTER,
+    ),
+    GreeVersatiSensorDescription(
+        key="elc_he1_run_sta",
+        translation_key="elc_he1_run_sta",
+        param_key=PARAM_ELC_HE1_RUN_STA,
+    ),
+    GreeVersatiSensorDescription(
+        key="elc_he2_run_sta",
+        translation_key="elc_he2_run_sta",
+        param_key=PARAM_ELC_HE2_RUN_STA,
+    ),
+    GreeVersatiSensorDescription(
+        key="wat_box_elc_he_run_sta",
+        translation_key="wat_box_elc_he_run_sta",
+        param_key=PARAM_WAT_BOX_ELC_HE_RUN_STA,
+    ),
+    GreeVersatiSensorDescription(
+        key="an_frzz_run_sta",
+        translation_key="an_frzz_run_sta",
+        param_key=PARAM_AN_FRZZ_RUN_STA,
+    ),
+    GreeVersatiSensorDescription(
+        key="sy_an_fro_run_sta",
+        translation_key="sy_an_fro_run_sta",
+        param_key=PARAM_SY_AN_FRO_RUN_STA,
+    ),
+    GreeVersatiSensorDescription(
+        key="sv_st",
+        translation_key="sv_st",
+        param_key=PARAM_SV_ST,
     ),
 )
 
