@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -20,6 +22,8 @@ from .constants import (
 )
 from .coordinator import GreeVersatiCoordinator
 from .entity import GreeVersatiEntity
+
+_LOGGER = logging.getLogger(__name__)
 
 _MODE_BY_LABEL = MODE_OPTIONS
 _LABEL_BY_MODE = {value: key for key, value in MODE_OPTIONS.items()}
@@ -66,6 +70,9 @@ class GreeVersatiModeSelect(GreeVersatiEntity, SelectEntity):
     @property
     def current_option(self) -> str | None:
         """Return selected mode option."""
+        # Return optimistic value if set (immediate UI response)
+        if self._optimistic_value is not None:
+            return str(self._optimistic_value)
         raw_value = (self.coordinator.data or {}).get(PARAM_MOD)
         if raw_value is None:
             return None
@@ -87,7 +94,10 @@ class GreeVersatiModeSelect(GreeVersatiEntity, SelectEntity):
             power_is_on = bool(power_value)
 
         if power_is_on:
+            _LOGGER.warning("Changing mode while heat pump is on is not allowed")
             raise HomeAssistantError("Turn off the unit before changing mode")
 
+        # Set optimistic value for immediate UI response
+        self._set_optimistic_value(option)
         await self._client.async_set({PARAM_MOD: _MODE_BY_LABEL[option]})
         await self.coordinator.async_request_refresh()

@@ -31,9 +31,20 @@ class GreeVersatiEntity(CoordinatorEntity[GreeVersatiCoordinator]):
             manufacturer="Gree",
             model="Versati 3",
         )
+        self._optimistic_value: object = None
 
     @property
     def available(self) -> bool:
         """Return if entity is available."""
         data = self.coordinator.data or {}
         return super().available and self._param_key in data
+
+    def _handle_coordinator_update(self) -> None:
+        """Handle coordinator update - clear optimistic value."""
+        self._optimistic_value = None
+        super()._handle_coordinator_update()
+
+    def _set_optimistic_value(self, value: object) -> None:
+        """Set optimistic value and trigger UI update."""
+        self._optimistic_value = value
+        self.async_write_ha_state()

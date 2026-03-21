@@ -59,6 +59,9 @@ class GreeVersatiPowerSwitch(GreeVersatiEntity, SwitchEntity):
     @property
     def is_on(self) -> bool | None:
         """Return switch state."""
+        # Return optimistic value if set (immediate UI response)
+        if self._optimistic_value is not None:
+            return bool(self._optimistic_value)
         value = (self.coordinator.data or {}).get(PARAM_POW)
         if value is None:
             return None
@@ -69,10 +72,14 @@ class GreeVersatiPowerSwitch(GreeVersatiEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs: object) -> None:
         """Turn on power."""
+        # Set optimistic value for immediate UI response
+        self._set_optimistic_value(True)
         await self._client.async_set({PARAM_POW: 1})
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs: object) -> None:
         """Turn off power."""
+        # Set optimistic value for immediate UI response
+        self._set_optimistic_value(False)
         await self._client.async_set({PARAM_POW: 0})
         await self.coordinator.async_request_refresh()

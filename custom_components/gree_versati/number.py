@@ -14,11 +14,15 @@ from .constants import (
     DATA_CLIENT,
     DATA_COORDINATOR,
     DATA_ENTRIES,
+    CO_WAT_OUT_TEMP_SET_STEP,
     HE_WAT_OUT_TEMP_SET_STEP,
+    MAX_CO_WAT_OUT_TEMP_SET,
     MAX_HE_WAT_OUT_TEMP_SET,
     MAX_WAT_BOX_TEMP_SET,
+    MIN_CO_WAT_OUT_TEMP_SET,
     MIN_HE_WAT_OUT_TEMP_SET,
     MIN_WAT_BOX_TEMP_SET,
+    PARAM_CO_WAT_OUT_TEM_SET,
     PARAM_HE_WAT_OUT_TEM_SET,
     PARAM_WAT_BOX_TEM_SET,
     WAT_BOX_TEMP_SET_STEP,
@@ -37,6 +41,11 @@ async def async_setup_entry(
     async_add_entities(
         [
             GreeVersatiOutletSetpointNumber(
+                runtime_data[DATA_COORDINATOR],
+                entry.data[CONF_DEVICE_ID],
+                runtime_data[DATA_CLIENT],
+            ),
+            GreeVersatiCoolingOutletSetpointNumber(
                 runtime_data[DATA_COORDINATOR],
                 entry.data[CONF_DEVICE_ID],
                 runtime_data[DATA_CLIENT],
@@ -69,6 +78,9 @@ class GreeVersatiSetpointNumber(GreeVersatiEntity, NumberEntity):
     @property
     def native_value(self) -> float | None:
         """Return current setpoint value."""
+        # Return optimistic value if set (immediate UI response)
+        if self._optimistic_value is not None:
+            return float(self._optimistic_value)
         value = (self.coordinator.data or {}).get(self._param_key)
         if value is None:
             return None
@@ -79,6 +91,8 @@ class GreeVersatiSetpointNumber(GreeVersatiEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Set setpoint value."""
+        # Set optimistic value for immediate UI response
+        self._set_optimistic_value(value)
         await self._client.async_set({self._param_key: int(round(value))})
         await self.coordinator.async_request_refresh()
 
@@ -98,6 +112,23 @@ class GreeVersatiOutletSetpointNumber(GreeVersatiSetpointNumber):
         client: GreeVersatiProtocolClient,
     ) -> None:
         super().__init__(coordinator, device_id, client, PARAM_HE_WAT_OUT_TEM_SET)
+
+
+class GreeVersatiCoolingOutletSetpointNumber(GreeVersatiSetpointNumber):
+    """Number entity for cooling water outlet setpoint."""
+
+    _attr_translation_key = "co_wat_out_tem_set"
+    _attr_native_min_value = MIN_CO_WAT_OUT_TEMP_SET
+    _attr_native_max_value = MAX_CO_WAT_OUT_TEMP_SET
+    _attr_native_step = CO_WAT_OUT_TEMP_SET_STEP
+
+    def __init__(
+        self,
+        coordinator: GreeVersatiCoordinator,
+        device_id: str,
+        client: GreeVersatiProtocolClient,
+    ) -> None:
+        super().__init__(coordinator, device_id, client, PARAM_CO_WAT_OUT_TEM_SET)
 
 
 class GreeVersatiWatBoxSetpointNumber(GreeVersatiSetpointNumber):
